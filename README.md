@@ -17,8 +17,7 @@ It provides 4 REST API Endpoints:
   createPolicy is be used to create a policy for the specified property id. Since, property is connected with business and business is connected with consumer, we can get all the necessary inputs such as Consumer Details, Business Details, Accepted Quotes, and Agent Details, from the property id itself. If you try to create a policy for any property, it will display the appropriate response according to the logic. Initially, policy status will be set to "Initiated".
 
 2. PUT: /issuePolicy (Input: Policy ID, Payment Details | Output: Issue Status)
-  <br>
-  issuePlicy takes policy id and payment details as inputs and displays the appropriate policy status. If the policy is being issued for the first time and with valid payment details, it will issue the policy and change the policy status to "Issued". Else, it will display appropriate responses according to the inputs.
+>  issuePlicy takes policy id and payment details as inputs and displays the appropriate policy status. If the policy is being issued for the first time and with valid payment details, it will issue the policy and change the policy status to "Issued". Else, it will display appropriate responses according to the inputs.
 
 3. GET: / viewPolicy (Input: Policy ID | Output: Policy Details) 
   <br>
