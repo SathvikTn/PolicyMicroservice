@@ -1,0 +1,189 @@
+InsureityPortalDB
+
+----------------------------
+-- Query
+
+
+create table Agent
+(
+AgentId int Identity(1,1) Primary Key,
+AgentName varchar(100) not null,
+Password varchar(100) not null
+);
+
+create table Consumer
+(
+ConsumerId int Identity(1,1) Primary Key,
+ConsumerName varchar(100) not NULL,
+DateOfBirth date not NULL,
+Email varchar(100) not NULL,
+PanNumber varchar(100) not NULL,
+AgentId int not NULL FOREIGN KEY REFERENCES [Agent](AgentId)
+);
+
+create table BusinessMaster
+(
+BusinessMasterId int Identity(1,1) Primary Key,
+BusinessValue int not NULL,
+BusinessTurnOver int not NULL,
+CapitalInvest int not NULL
+);
+
+
+create table PropertyMaster
+(
+PropertyMasterId int Identity(1,1) Primary Key,
+CostOfAssest int not NULL,
+SalvageValue int not NULL,
+UsefulLifeOfAssest int not NULL,
+PropertyValue int not NULL
+);
+
+create table Business
+(
+BusinessId int Identity(1,1) Primary Key,
+BusinessName varchar(100) not NULL,
+BusinessType varchar(100) not NULL,
+TotalEmployees int not NULL,
+BusinessMasterId int not NULL FOREIGN KEY REFERENCES [BusinessMaster](BusinessMasterId),
+ConsumerId int not NULL FOREIGN KEY REFERENCES [Consumer](ConsumerId) ON UPDATE CASCADE
+ON DELETE CASCADE
+);
+
+
+create table Property
+(
+PropertyId int Identity(1,1) Primary Key,
+BuildingType varchar(100) not NULL,
+BuildingStoreys int not NULL,
+BuildingAge int not NULL,
+BusinessId int not NULL FOREIGN KEY REFERENCES [Business](BusinessId) ON UPDATE CASCADE
+ON DELETE CASCADE,
+PropertyMasterId int not NULL FOREIGN KEY REFERENCES [PropertyMaster](PropertyMasterId)
+);
+
+
+create table PolicyMaster
+(
+PropertyMasterId int Identity(1,1) Primary Key,
+PropertyType varchar(255) not null,
+ConsumerType varchar(255) not null,
+AssuredSum decimal(10,3) not null,
+Tenure int not null,
+BusinesssValue int not null,
+PropertyValue int not null,
+BaseLocation varchar(255) not null,
+PolicyType varchar(255) not null
+);
+
+create table Quote
+(
+QuoteId int Identity(1,1) Primary Key,
+PropertyValueFrom int not null,
+PropertyValueTo int not null,
+BusinesssValueFrom  int not null,
+BusinesssValueTo int not null,
+PropertyType varchar(50) not null,
+QuoteValue decimal(8,2) not null
+);
+
+create table ConsumerPolicy
+(
+PolicyId int Identity(1,1) Primary Key,
+PropertyId int not null FOREIGN KEY REFERENCES [Property](PropertyId) ON UPDATE CASCADE
+ON DELETE CASCADE,
+QuoteId int not null FOREIGN KEY REFERENCES [Quote](QuoteId) ON UPDATE CASCADE
+ON DELETE CASCADE,
+PolicyStatus varchar(255) not null,
+PolicyMasterId int not null FOREIGN KEY REFERENCES [PolicyMaster](PropertyMasterId)
+);
+
+
+Insert into Agent (AgentName,Password) values
+('Shivangi','Shivangi@1'),
+('Ram','Ram@1'),
+('Vamshi','Vamshi@1'),
+('Sathvik','Sathvik@1'),
+('Vasavi','Vasvi@1');
+
+INSERT INTO Consumer (ConsumerName, DateOfBirth, Email, PanNumber, AgentId)
+VALUES 
+('Vamshi','2000-01-01', 'vamshi@gmail.com', 'VAMSHI1234Q', 1),
+('Sathvik','2000-02-01', 'sathvik@gmail.com', 'SATHVIK1234Q', 4),
+( 'Shivangi','2000-03-01', 'shivangi@gmail.com', 'SHIVAGI1234Q', 1),
+( 'Vasavi','2000-04-01', 'vasavi@gmail.com', 'VASAVI1234Q', 3),
+( 'Ram','2000-04-01', 'ram@gmail.com', 'VASAVI1234Q', 2);
+
+insert into BusinessMaster(BusinessValue,BusinessTurnOver,CapitalInvest)
+values
+(0,1000,10000),
+(1,2400,20000),
+(2,4500,30000),
+(3,7200,40000),
+(4,10000,50000),
+(5,13200,60000),
+(6,17500,70000),
+(7,20000,80000),
+(8,25200,90000),
+(9,28000,100000);
+
+insert into PropertyMaster(CostOfAssest,SalvageValue,UsefulLifeOfAssest,PropertyValue)
+values
+(100000,500,5,0),
+(200000,1200,6,1),
+(300000,2100,7,2),
+(400000,3200,8,3),
+(500000,4500,9,4),
+(600000,6000,10,5),
+(700000,7700,11,6),
+(800000,9600,12,7),
+(900000,11700,13,8),
+(1000000,14000,14,9);
+
+INSERT INTO Business(BusinessName,BusinessType,TotalEmployees,BusinessMasterId,ConsumerId)
+VALUES 
+('Ram Stores','SoleProprietorship',15,1,3),
+('Pk Mart','SoleProprietorship',20,2,2),
+('Raul Shop','Patnership',75,3,1),
+('Yrk Stores','Patnership',100,4,2);
+
+INSERT INTO Property(BuildingType,BuildingStoreys,BuildingAge,BusinessId,PropertyMasterId)
+VALUES
+('OfficeBuilding',5,3,1,1),
+('IndustrialBuilding',10,3,2,2),
+('Warehouse',5,1,3,3),
+('OfficeBuilding',4,6,4,4);
+
+insert into [PolicyMaster](PropertyType, ConsumerType, AssuredSum, Tenure, BusinesssValue, 
+PropertyValue, BaseLocation, PolicyType) values
+('Building','Owner',2000000,3,8,5,'Chennai','Replacement'),
+('Factory Equipment','Owner',400000,1,5,5,'Chennai','Replacement'),
+('Property in Transit','Owner',200000,1,7,8,'Pune','Pay Back'),
+('Building','Owner',500000,1,3,3,'Kolkata','Pay Back'),
+('Mill','Owner',2000000,4,2,5,'Chennai','Replacement'),
+('Hospital','Owner',2000000,5,7,4,'Chennai','Replacement'),
+('School','Owner',2000000,2,4,9,'Chennai','Replacement'),
+('BookStore','Owner',2000000,6,4,5,'Chennai','Replacement'),
+('Factory Equipment','Owner',400000,1,7,6,'Chennai','Replacement');
+
+
+
+insert into [Quote](PropertyValueFrom, PropertyValueTo, BusinesssValueFrom,
+BusinesssValueTo, PropertyType, QuoteValue) values
+(0,2,0,2,'Equipment',80000),
+(3,5,3,5,'Equipment',50000),
+(6,8,6,8,'Equipment',70000),
+(9,10,9,10,'Equipment',90000),
+(3,5,0,2,'Equipment',40000),
+(0,2,3,5,'Equipment',40000),
+(3,5,6,8,'Equipment',60000),
+(3,5,9,10,'Equipment',80000);
+
+insert into ConsumerPolicy(PropertyId, QuoteID, PolicyStatus, PolicyMasterId) values
+(1,2,'Initiated',2),
+(1,2,'Initiated',2);
+
+
+--------------------------------------------
+
+Scaffold-DbContext "Server=VAMSHI\SQLEXPRESS;Database=InsureityPortalDatabase;Trusted_Connection=True;"Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
